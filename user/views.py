@@ -24,8 +24,6 @@ def logout(request):
     messages.success(request, 'Logout successful!')   
     return redirect('login')
 
-
-
 def register(request):
     if request.method == 'POST':
         username = request.POST.get('username')
