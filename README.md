@@ -1,1 +1,1 @@
-# APIT-django-web
+# APIT (Agent Programmatic Intergration Testing)
