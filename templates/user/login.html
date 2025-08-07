@@ -1,10 +1,12 @@
 {% extends "main/base.html" %}
+
 {% load static %}
 
 {% block title %}Login{% endblock %}
 
 {% block content %}
-<link rel="stylesheet" href="{% static 'login.css' %}">
+
+<link rel="stylesheet" href="{% static 'css/login.css' %}">
 
 <div class="login-container">
     <div class="login-card">
@@ -80,5 +82,8 @@
     </div>
 </div>
 
+
 <script src="{% static 'js/login.js' %}"></script>
+<script src="{% static 'js/form-utils.js' %}"></script>
+
 {% endblock %}
