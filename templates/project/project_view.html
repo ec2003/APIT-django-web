@@ -1,0 +1,17 @@
+{% extends 'main/base.html' %}
+
+{% load static %}
+
+{% block title %}Project Details{% endblock %}
+
+{% block content %}
+    <h1>Project Details</h1>
+    <div class="container-fluid mt-5">
+        <b>Project Name: {{ project.project_name }}</b>
+        <p>Description: {{ project.description }}</p>
+        <p>Created on: {{ project.created_at }}</p>
+        <a href="{% url 'project_edit' project_uuid=project.uuid %}" class="btn btn-secondary">Edit Project</a>
+        <a href="{% url 'project_delete' project_uuid=project.uuid %}" class="btn btn-danger">Delete Project</a>
+        <a href="{% url 'project_list' %}" class="btn btn-primary">Back to Project List</a>
+    </div>
+{% endblock %}

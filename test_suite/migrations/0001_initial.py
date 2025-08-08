@@ -9,22 +9,23 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('test_suite', '0001_initial'),
+        ('project', '0001_initial'),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='TestCaseHistory',
+            name='ProjectTestSuite',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('test_case', models.JSONField()),
+                ('test_suite_name', models.CharField(max_length=255)),
+                ('description', models.TextField(blank=True, null=True)),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-                ('test_suite', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='test_suite.projecttestsuite')),
+                ('project', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='project.userproject')),
             ],
             options={
                 'ordering': ['-created_at'],
-                'indexes': [models.Index(fields=['test_suite'], name='testcase_hi_test_su_b7de14_idx')],
+                'indexes': [models.Index(fields=['project'], name='test_suite__project_3768f4_idx'), models.Index(fields=['test_suite_name'], name='test_suite__test_su_cfc77f_idx')],
+                'unique_together': {('project', 'test_suite_name')},
             },
         ),
     ]
