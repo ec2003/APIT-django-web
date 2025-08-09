@@ -29,6 +29,8 @@ COPY --from=builder /usr/local/bin/ /usr/local/bin/
 # Set the working directory
 WORKDIR /app
 
+# Copy static từ stage 1
+COPY --from=builder /app/static/ /app/static/
 
 # Copy application code
 COPY --chown=appuser:appuser . .
