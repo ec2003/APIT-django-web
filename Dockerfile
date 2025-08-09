@@ -9,6 +9,8 @@ WORKDIR /app
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
+COPY static/ /app/static/
+
 # Copy the requirements file into the container
 RUN pip install --upgrade pip 
 COPY requirements.txt /app/ 
@@ -24,10 +26,10 @@ RUN useradd -m -r appuser && \
 # Copy the Python dependencies from the builder stage
 COPY --from=builder /usr/local/lib/python3.11/site-packages/ /usr/local/lib/python3.11/site-packages/
 COPY --from=builder /usr/local/bin/ /usr/local/bin/
- 
 # Set the working directory
 WORKDIR /app
- 
+
+
 # Copy application code
 COPY --chown=appuser:appuser . .
  
