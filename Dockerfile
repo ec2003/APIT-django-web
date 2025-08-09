@@ -9,8 +9,6 @@ WORKDIR /app
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
-COPY static/ /app/static/
-
 # Copy the requirements file into the container
 RUN pip install --upgrade pip 
 COPY requirements.txt /app/ 
@@ -28,9 +26,6 @@ COPY --from=builder /usr/local/lib/python3.11/site-packages/ /usr/local/lib/pyth
 COPY --from=builder /usr/local/bin/ /usr/local/bin/
 # Set the working directory
 WORKDIR /app
-
-# Copy static từ stage 1
-COPY --from=builder /app/static/ /app/static/
 
 # Copy application code
 COPY --chown=appuser:appuser . .
