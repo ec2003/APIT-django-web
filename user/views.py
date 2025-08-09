@@ -11,10 +11,10 @@ def login(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             auth_login(request, user)
-            messages.success(request, 'Login successful!')
+            # messages.success(request, 'Login successful!')
             return redirect('home')
         else:
-            messages.error(request, 'Invalid username or password')
+            # messages.error(request, 'Invalid username or password')
             return render(request, 'user/login.html')
     else:
         return render(request, 'user/login.html')

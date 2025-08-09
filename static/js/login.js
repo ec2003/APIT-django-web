@@ -3,7 +3,7 @@
 
 class LoginForm1 {
     constructor() {
-        this.form = document.getElementById('loginForm');
+        this.form = document.querySelector('.login-form');
         this.submitBtn = this.form.querySelector('.login-btn');
         this.passwordToggle = document.getElementById('passwordToggle');
         this.passwordInput = document.getElementById('password');
@@ -48,7 +48,7 @@ class LoginForm1 {
         });
         
         // Remember me checkbox animation
-        const checkbox = document.getElementById('remember');
+        const checkbox = this.form.querySelector('input[name="remember"]');
         if (checkbox) {
             checkbox.addEventListener('change', () => this.animateCheckbox());
         }
@@ -328,7 +328,7 @@ class LoginForm1 {
     setupKeyboardShortcuts() {
         document.addEventListener('keydown', (e) => {
             // Enter key submits form if focus is on form elements
-            if (e.key === 'Enter' && e.target.closest('#loginForm')) {
+            if (e.key === 'Enter' && e.target.closest('.login-form')) {
                 e.preventDefault();
                 this.handleSubmit(e);
             }
@@ -375,7 +375,7 @@ document.addEventListener('visibilitychange', () => {
         // Re-focus on email field if user returns to page
         const activeElement = document.activeElement;
         if (activeElement && activeElement.tagName !== 'INPUT') {
-            const emailInput = document.querySelector('#email');
+            const emailInput = document.getElementById('email');
             if (emailInput && !emailInput.value) {
                 setTimeout(() => emailInput.focus(), 100);
             }
