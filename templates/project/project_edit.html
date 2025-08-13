@@ -17,7 +17,7 @@
         <textarea class="form-control" id="description" name="description" required>{{ project.description }}</textarea>
     </div>
     <button type="submit" class="btn btn-primary">Edit Project</button>
-    <a href="{% url 'project_view' project_uuid=project.uuid %}" class="btn btn-secondary">Cancel</a>
+    <a href="{% url 'project_detail_by_uuid' project_uuid=project.uuid %}" class="btn btn-secondary">Cancel</a>
 </form>
 
 {% endblock %}

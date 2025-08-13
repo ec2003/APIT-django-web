@@ -1,15 +1,32 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 from .models import UserProject
+from testcase_history.models import TestCaseHistory
+from test_suite.models import ProjectTestSuite
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from main.decorators import set_test_suites_show
 
 @login_required
 def project_list(request):
     # This view will render the list of projects for the logged-in user
     projects = UserProject.objects.filter(user=request.user)
+    if not projects:
+        messages.info(request, "You have no projects yet. Consider adding one.")
+    # You can also paginate the projects if needed
+    # For example, using Django's built-in pagination:
+    # Optionally, you can also fetch related data like test cases or test suites if needed
+    # For example, to get test cases related to the projects:
+
     context = {
-        'projects': projects
+        'projects': [{
+            'uuid': project.uuid,
+            'project_name': project.project_name,
+            'description': project.description,
+            'created_at': project.created_at,
+            'test_suites_count_per_project': ProjectTestSuite.objects.filter(project=project).count(),
+            'test_cases_count_per_project': TestCaseHistory.objects.filter(test_suite__project=project).count()
+        } for project in projects]
     }
     return render(request, 'project/project_list.html', context)
 
@@ -39,20 +56,45 @@ def project_add(request):
         # Render the project add form
         return render(request, 'project/project_add.html')
 
+@set_test_suites_show(True)
 @login_required
 def project_detail_by_uuid(request, project_uuid):
     # Use get_object_or_404 to retrieve the object or raise a 404 error if not found
     project = get_object_or_404(UserProject, uuid=project_uuid)
+    if project.user != request.user:
+        messages.error(request, "You do not have permission to view this project.")
+        return redirect('project_list')
+    test_suites = ProjectTestSuite.objects.filter(project=project)
+
 
     context = {
-        'project': project
+        'project': project,
+        'test_suites': [{
+            'uuid': test_suite.uuid,
+            'test_suite_name': test_suite.test_suite_name,
+            'description': test_suite.description,
+            'created_at': test_suite.created_at,
+            'test_cases_count': TestCaseHistory.objects.filter(test_suite=test_suite).count()
+        } for test_suite in test_suites],
     }
     return render(request, 'project/project_view.html', context)
 
+@set_test_suites_show(True)
 @login_required
 def project_edit(request, project_uuid):
     # This view will handle editing an existing project
     project = get_object_or_404(UserProject, uuid=project_uuid, user=request.user)
+    if project.user != request.user:
+        messages.error(request, "You do not have permission to edit this project.")
+        return redirect('project_list')
+    
+    test_suites = ProjectTestSuite.objects.filter(project=project)
+
+    context = {
+        'project': project,
+        'test_suites': test_suites,
+    }
+
 
     if request.method == 'POST':
         project_name = request.POST.get('project_name')
@@ -60,7 +102,7 @@ def project_edit(request, project_uuid):
 
         if not project_name:
             messages.error(request, "Project name is required.")
-            return render(request, 'project/project_edit.html', {'project': project})
+            return render(request, 'project/project_edit.html', context)
 
         # Update the project instance and save it to the database
         project.project_name = project_name
@@ -69,14 +111,24 @@ def project_edit(request, project_uuid):
         messages.success(request, "Project updated successfully.")
         return redirect(reverse('project_detail_by_uuid', kwargs={'project_uuid': project.uuid}))
     
-    return render(request, 'project/project_edit.html', {'project': project})
+    return render(request, 'project/project_edit.html', context)
 
+@set_test_suites_show(True)
 @login_required
 def project_delete(request, project_uuid):
     # This view will handle deleting an existing project
     project = get_object_or_404(UserProject, uuid=project_uuid, user=request.user)
+    if project.user != request.user:
+        messages.error(request, "You do not have permission to delete this project.")
+        return redirect('project_list')
+    test_suites = ProjectTestSuite.objects.filter(project=project)
+    context = {
+        'project': project,
+        'test_suites': test_suites,
+    }
+    
     if request.method == 'POST':
         project.delete()
         messages.success(request, "Project deleted successfully.")
         return redirect('project_list')
-    return render(request, 'project/project_delete.html', {'project': project})
+    return render(request, 'project/project_delete.html', context)

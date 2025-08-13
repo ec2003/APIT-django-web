@@ -17,6 +17,7 @@ class UserProject(models.Model):
         indexes = [
             models.Index(fields=['user']),
             models.Index(fields=['project_name']),
+            models.Index(fields=['uuid'])
         ]
         ordering = ['-created_at']
         unique_together = ['user', 'project_name']

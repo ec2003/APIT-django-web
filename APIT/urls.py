@@ -23,4 +23,5 @@ urlpatterns = [
     path('testcase_history/', include('testcase_history.urls')),
     path('user/', include('user.urls')),
     path('project/', include('project.urls')),
+    path('test_suite/', include('test_suite.urls')),
 ]
